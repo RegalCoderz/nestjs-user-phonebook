@@ -1,6 +1,8 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Op } from 'sequelize';
 import { Contact } from 'src/models/contact/contact.model';
 import { ContactDTO } from './dto/Contact.dto';
+import { GetContactsFilterDTO } from './dto/GetContactsFilter.dto';
 
 @Injectable()
 export class ContactsService {
@@ -13,11 +15,48 @@ export class ContactsService {
     return await this.contactRepository.findAll({ where: { user_id } });
   }
 
+  async findAllContactsWithFilters(
+    contactFilterDto: GetContactsFilterDTO,
+    user_id: number,
+  ): Promise<any> {
+    const { first_name, last_name, city, country } = contactFilterDto;
+
+    const whereClause: { [key: string]: any } = {};
+
+    if (first_name) {
+      whereClause.first_name = {
+        [Op.like]: `%${first_name}%`,
+      };
+    }
+    if (last_name) {
+      whereClause.last_name = {
+        [Op.like]: `%${last_name}%`,
+      };
+    }
+    if (city) {
+      whereClause.city = {
+        [Op.like]: `%${city}%`,
+      };
+    }
+    if (country) {
+      whereClause.country = {
+        [Op.like]: `%${country}%`,
+      };
+    }
+
+    return this.contactRepository.findAll({
+      where: {
+        user_id,
+        ...whereClause,
+      },
+    });
+  }
+
   async findOneContact(id: number, user_id: number): Promise<Contact> {
     return await this.contactRepository.findOne({ where: { id, user_id } });
   }
 
-  async findFvtContacts(user_id: number): Promise<Contact[]> {
+  async findFavoriteContacts(user_id: number): Promise<Contact[]> {
     return await this.contactRepository.findAll({
       where: {
         user_id,
@@ -26,7 +65,7 @@ export class ContactsService {
     });
   }
 
-  async addFvtContacts(id: number, user_id: number): Promise<Contact> {
+  async addToFavorite(id: number, user_id: number): Promise<Contact> {
     const contact = await this.findOneContact(id, user_id);
 
     if (!contact.is_favorite) {
@@ -38,7 +77,7 @@ export class ContactsService {
     return contact;
   }
 
-  async removeFvtContacts(id: number, user_id: number): Promise<any> {
+  async removeFromFavorite(id: number, user_id: number): Promise<any> {
     const contact = await this.findOneContact(id, user_id);
     if (contact.is_favorite) {
       contact.is_favorite = false;
