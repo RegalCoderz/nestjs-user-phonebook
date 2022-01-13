@@ -41,6 +41,10 @@ module.exports = {
           allowNull: false,
           defaultValue: false,
         },
+        avatar_path: {
+          type: Sequelize.STRING,
+          allowNull: true,
+        },
         user_id: {
           type: Sequelize.INTEGER,
           allowNull: false,
@@ -56,7 +60,6 @@ module.exports = {
       },
     );
   },
-
   down: async (queryInterface, Sequelize) => {
     return queryInterface.dropTable('Contacts');
   },

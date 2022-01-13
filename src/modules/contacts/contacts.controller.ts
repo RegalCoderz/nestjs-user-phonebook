@@ -8,14 +8,32 @@ import {
   Put,
   Query,
   Request,
-  UseGuards
+  UploadedFile,
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiParam } from '@nestjs/swagger';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 import { Contact } from 'src/models/contact/contact.model';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { ContactsService } from './contacts.service';
 import { ContactDTO } from './dto/Contact.dto';
 import { GetContactsFilterDTO } from './dto/GetContactsFilter.dto';
+
+export const storage = {
+  storage: diskStorage({
+    destination: `./uploads/avatars`,
+    filename: (req, file, cb) => {
+      const randomName = Array(5)
+      .fill(null)
+      .map(() => Math.round(Math.random() * 16).toString(16))
+      .join('');
+      return cb(null, `${randomName}${extname(file.originalname)}`);
+    },
+  }),
+}
 
 @UseGuards(JwtAuthGuard)
 @Controller('contacts')
@@ -25,7 +43,10 @@ export class ContactsController {
   @Get()
   getContacts(@Query() contactFilterDto: GetContactsFilterDTO, @Request() req) {
     if (Object.keys(contactFilterDto).length) {
-      return this.contactsService.findAllContactsWithFilters(contactFilterDto, req.user.userId);
+      return this.contactsService.findAllContactsWithFilters(
+        contactFilterDto,
+        req.user.userId,
+      );
     } else {
       return this.contactsService.findAll(req.user.userId);
     }
@@ -72,6 +93,22 @@ export class ContactsController {
       params.id,
       req.user.userId,
       updatedContact,
+    );
+  }
+
+  @Post('/:id/avatar-upload')
+  @UseInterceptors(
+    FileInterceptor('file', storage),
+  )
+  uploadContactAvatar(
+    @Param() params,
+    @Request() req,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.contactsService.uploadContactAvatar(
+      params.id,
+      req.user.userId,
+      file.path,
     );
   }
 
