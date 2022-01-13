@@ -8,32 +8,27 @@ import {
   Put,
   Query,
   Request,
-  UploadedFile,
-  UseGuards,
-  UseInterceptors
+  UseGuards
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiParam } from '@nestjs/swagger';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Contact } from 'src/models/contact/contact.model';
-import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { ContactsService } from './contacts.service';
 import { ContactDTO } from './dto/Contact.dto';
 import { GetContactsFilterDTO } from './dto/GetContactsFilter.dto';
 
-export const storage = {
-  storage: diskStorage({
-    destination: `./uploads/avatars`,
-    filename: (req, file, cb) => {
-      const randomName = Array(5)
-      .fill(null)
-      .map(() => Math.round(Math.random() * 16).toString(16))
-      .join('');
-      return cb(null, `${randomName}${extname(file.originalname)}`);
-    },
-  }),
-}
+// export const storage = {
+//   storage: diskStorage({
+//     destination: `./uploads/avatars`,
+//     filename: (req, file, cb) => {
+//       const randomName = Array(5)
+//       .fill(null)
+//       .map(() => Math.round(Math.random() * 16).toString(16))
+//       .join('');
+//       return cb(null, `${randomName}${extname(file.originalname)}`);
+//     },
+//   }),
+// }
 
 @UseGuards(JwtAuthGuard)
 @Controller('contacts')
@@ -52,30 +47,42 @@ export class ContactsController {
     }
   }
 
-  @Get('/favorite')
+  @Get('favorite')
   getFavoriteContacts(@Request() req) {
     return this.contactsService.findFavoriteContacts(req.user.userId);
   }
 
-  @Put('/:id/add-favorite')
+  @Put(':id/add-favorite')
   @ApiParam({ name: 'id' })
   addContactToFavorite(@Param() params, @Request() req): Promise<Contact> {
     return this.contactsService.addToFavorite(params.id, req.user.userId);
   }
 
-  @Put('/:id/remove-favorite')
+  @Put(':id/remove-favorite')
   @ApiParam({ name: 'id' })
   removeContactFromFavorite(@Param() params, @Request() req): Promise<Contact> {
     return this.contactsService.removeFromFavorite(params.id, req.user.userId);
   }
 
-  @Get('/:id')
+  // @Post(':id/avatar')
+  // @UseInterceptors(
+  //   FileInterceptor('file'),
+  // )
+  // uploadContactAvatar(
+    // @Param() params,
+    // @Request() req,
+    // @UploadedFile() file: Express.Multer.File,
+  // ) {
+  //  return 'Hello World';
+  // }
+
+  @Get(':id')
   @ApiParam({ name: 'id' })
   getOneContact(@Param() params, @Request() req): Promise<Contact> {
     return this.contactsService.findOneContact(params.id, req.user.userId);
   }
 
-  @Post('/create')
+  @Post('create')
   async createContact(
     @Body() contact: ContactDTO,
     @Request() req,
@@ -83,7 +90,7 @@ export class ContactsController {
     return await this.contactsService.createContact(contact, req.user.userId);
   }
 
-  @Put('/:id')
+  @Put(':id')
   updateContact(
     @Param() params,
     @Request() req,
@@ -93,22 +100,6 @@ export class ContactsController {
       params.id,
       req.user.userId,
       updatedContact,
-    );
-  }
-
-  @Post('/:id/avatar-upload')
-  @UseInterceptors(
-    FileInterceptor('file', storage),
-  )
-  uploadContactAvatar(
-    @Param() params,
-    @Request() req,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
-    return this.contactsService.uploadContactAvatar(
-      params.id,
-      req.user.userId,
-      file.path,
     );
   }
 

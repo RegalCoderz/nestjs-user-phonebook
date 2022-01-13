@@ -6,8 +6,8 @@ import {
   Param, Put
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { UserDTO } from './dto/User.dto';
 import { User } from '../../models/user/user.model';
+import { UserDTO } from './dto/User.dto';
 import { UsersService } from './users.service';
 
 @ApiTags()

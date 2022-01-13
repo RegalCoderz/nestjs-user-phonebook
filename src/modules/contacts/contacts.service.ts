@@ -107,13 +107,13 @@ export class ContactsService {
     return contact;
   }
 
-  uploadContactAvatar(id: number, user_id: number, avatar_path: string): Promise<any> {
-    const avatar =  this.contactRepository.update(
-      { avatar_path },
-      { where: { id, user_id } },
-    );
-    return avatar;
-  }
+  // uploadContactAvatar(id: number, user_id: number, avatar_path: string){
+    // const avatar =  this.contactRepository.update(
+    //   { avatar_path },
+    //   { where: { id, user_id } },
+    // );
+    // return avatar_path;
+  // }
 
   async deleteContact(id: number, user_id: number): Promise<Contact> {
     const contact = await this.findOneContact(id, user_id);

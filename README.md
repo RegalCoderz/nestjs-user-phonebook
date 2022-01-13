@@ -7,3 +7,9 @@ Send Emails With Nest Js
 1: https://notiz.dev/blog/send-emails-with-nestjs
 2: https://mailtrap.io/
 
+How to Add New Fields to Existing Sequelize Migration : https://dev.to/nedsoft/add-new-fields-to-existing-sequelize-migration-3527
+
+CAN HELP IN 
+
+Configurations : https://youtu.be/eRjIZHcDLHk
+https://youtu.be/tu3uFMrCqq4

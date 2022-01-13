@@ -1,4 +1,4 @@
-import { Password } from '../../../models/password/password.model';
+import { Password } from '../../models/password/password.model';
 
 export const passwordProviders = [
   {
