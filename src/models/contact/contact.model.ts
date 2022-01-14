@@ -33,6 +33,9 @@ export class Contact extends Model {
   @Column
   is_favorite: boolean;
 
+  @Column
+  avatar_path: string;
+
   @ForeignKey(() => User)
   @Column
   user_id: number;
