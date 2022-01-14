@@ -19,17 +19,19 @@ export class AuthService {
     private mailerService: MailerService,
   ) {}
 
-  async validateUser(incomingEmail: string, incomingPassword: string): Promise<any> {
-    
+  async validateUser(
+    incomingEmail: string,
+    incomingPassword: string,
+  ): Promise<any> {
     const user = await this.userService.findOneByEmail(incomingEmail);
-  
+
     if (user) {
       // validate password
       const matched = await comparePassword(incomingPassword, user.password);
       if (matched) {
-        const { password, ...rest} = user['dataValues'];
-          return rest;
-        }
+        const { password, ...rest } = user['dataValues'];
+        return rest;
+      }
     } else {
       throw new BadRequestException('User does not exist');
     }
@@ -51,23 +53,25 @@ export class AuthService {
   // ======================== Auth Functions ==========================
 
   async signUpUser(userData: UserDTO): Promise<User> {
-    const {email, password} = userData;
+    const { email, password } = userData;
 
-    const alreadyCreated = await this.usersRepository.findOne({ where: { email } });
-    
+    const alreadyCreated = await this.usersRepository.findOne({
+      where: { email },
+    });
+
     if (alreadyCreated) {
-        throw new BadRequestException('User already exists');
-      } else {
-        return await this.usersRepository.create({
-          ...userData,
-          password: await passwordHashing(password),
-        });
-      }
+      throw new BadRequestException('User already exists');
+    } else {
+      return await this.usersRepository.create({
+        ...userData,
+        password: await passwordHashing(password),
+      });
+    }
   }
 
   async forgotPassword(email: string) {
     const user = await this.userService.findOneByEmail(email);
-    
+
     if (!user) {
       throw new BadRequestException('User does not exist');
     } else {
@@ -89,18 +93,19 @@ export class AuthService {
   }
 
   async resetPassword(token: any, password: string, password_confirm: string) {
-    const resetPassword = await this.findOneByToken(token);
-    if (resetPassword) {
+    const resetPasswordToken = await this.findOneByToken(token);
+    if (resetPasswordToken) {
       if (password !== password_confirm) {
         throw new BadRequestException('Passwords do not match');
       } else {
-        const user = await this.userService.findOneByEmail(resetPassword.email);
+        const user = await this.userService.findOneByEmail(resetPasswordToken.email);
 
-        if (!user) {
-          throw new BadRequestException('User does not exist');
-        } else {
-          this.userService.updatePassword(user.id, password);
+        if (user) {
+          const hashedPassword = await passwordHashing(password);
+          this.userService.updatePassword(user.id, hashedPassword);
           await this.deletePasswordToken(token);
+        } else {
+          throw new BadRequestException('User does not exist');
         }
       }
     } else {
