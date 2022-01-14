@@ -21,6 +21,10 @@
 
 - <https://dev.to/dannypule/exclude-route-from-nest-js-authgaurd-h0>
 
+## @nestjs/swagger does not set authorization headers
+
+- <https://stackify.dev/589977-nestjs-swagger-does-not-set-authorization-headers>
+
 ### CAN HELP IN
 
 ## Configurations

@@ -65,25 +65,16 @@ export class ContactsService {
     });
   }
 
-  async addToFavorite(id: number, user_id: number): Promise<Contact> {
+  async favoriteContactToggler(id: number, user_id: number): Promise<any> {
     const contact = await this.findOneContact(id, user_id);
 
-    if (!contact.is_favorite) {
-      contact.is_favorite = true;
-      contact.save();
+    console.log(contact);
+    
+    if(contact) {
+      contact.is_favorite = !contact.is_favorite;
+      await contact.save();
     } else {
-      throw new BadRequestException('Contact is already favorite');
-    }
-    return contact;
-  }
-
-  async removeFromFavorite(id: number, user_id: number): Promise<any> {
-    const contact = await this.findOneContact(id, user_id);
-    if (contact.is_favorite) {
-      contact.is_favorite = false;
-      contact.save();
-    } else {
-      throw new BadRequestException('Contact is already unfavorite');
+      throw new BadRequestException('Contact not found');
     }
     return contact;
   }
@@ -108,11 +99,11 @@ export class ContactsService {
   }
 
   // uploadContactAvatar(id: number, user_id: number, avatar_path: string){
-    // const avatar =  this.contactRepository.update(
-    //   { avatar_path },
-    //   { where: { id, user_id } },
-    // );
-    // return avatar_path;
+  // const avatar =  this.contactRepository.update(
+  //   { avatar_path },
+  //   { where: { id, user_id } },
+  // );
+  // return avatar_path;
   // }
 
   async deleteContact(id: number, user_id: number): Promise<Contact> {
