@@ -1,10 +1,11 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { comparePassword, passwordHashing } from 'src/common/utils/bcrypt';
 import { User } from 'src/models/user/user.model';
 import { UserDTO } from 'src/modules/users/dto/User.dto';
 import { UsersService } from 'src/modules/users/users.service';
-import { Password } from '../../models/password/password.model';
+import { Password } from '../models/password/password.model';
 
 @Injectable()
 export class AuthService {
@@ -18,23 +19,31 @@ export class AuthService {
     private mailerService: MailerService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
-    const user = await this.userService.findOneByEmail(email);
-    // validate password
-    if (user && user.password === pass) {
-      const { password, username, ...rest } = user;
-      return rest;
+  async validateUser(
+    incomingEmail: string,
+    incomingPassword: string,
+  ): Promise<any> {
+    const user = await this.userService.findOneByEmail(incomingEmail);
+
+    if (user) {
+      // validate password
+      const matched = await comparePassword(incomingPassword, user.password);
+      if (matched) {
+        const { password, ...rest } = user['dataValues'];
+        return rest;
+      }
+    } else {
+      throw new BadRequestException('User does not exist');
     }
     return null;
   }
 
-  // ======================== JWT ==========================
+  // ======================== JWT Access Token Generation ========================== //
 
   async logInUser(user: any) {
-    // return user.dataValues.id;
     const payload = {
-      username: user.dataValues.username,
-      sub: user.dataValues.id,
+      username: user.username,
+      sub: user.id,
     };
     return {
       access_token: this.jwtService.sign(payload),
@@ -43,25 +52,31 @@ export class AuthService {
 
   // ======================== Auth Functions ==========================
 
-  signUpUser(userData: UserDTO): Promise<User> {
-    const email = userData.email;
-    const alreadyCreated = this.usersRepository.findOne({ where: { email } });
+  async signUpUser(userData: UserDTO): Promise<User> {
+    const { email, password } = userData;
+
+    const alreadyCreated = await this.usersRepository.findOne({
+      where: { email },
+    });
 
     if (alreadyCreated) {
-      return this.usersRepository.create(userData);
+      throw new BadRequestException('User already exists');
     } else {
-      throw new Error('User already exists');
+      return await this.usersRepository.create({
+        ...userData,
+        password: await passwordHashing(password),
+      });
     }
   }
 
   async forgotPassword(email: string) {
-    const token = Math.random().toString(36).substring(2, 15);
     const user = await this.userService.findOneByEmail(email);
 
     if (!user) {
       throw new BadRequestException('User does not exist');
     } else {
-      this.createPasswordToken({ email, token });
+      const token = Math.random().toString(36).substring(2, 15);
+      await this.createPasswordToken({ email, token });
       const url = `https://localhost:3000/auth/reset/${token}`;
 
       await this.mailerService.sendMail({
@@ -78,18 +93,19 @@ export class AuthService {
   }
 
   async resetPassword(token: any, password: string, password_confirm: string) {
-    const resetPassword = await this.findOneByToken(token);
-    if (resetPassword) {
+    const resetPasswordToken = await this.findOneByToken(token);
+    if (resetPasswordToken) {
       if (password !== password_confirm) {
         throw new BadRequestException('Passwords do not match');
       } else {
-        const user = await this.userService.findOneByEmail(resetPassword.email);
+        const user = await this.userService.findOneByEmail(resetPasswordToken.email);
 
-        if (!user) {
-          throw new BadRequestException('User does not exist');
-        } else {
-          this.userService.updatePassword(user.id, password);
+        if (user) {
+          const hashedPassword = await passwordHashing(password);
+          this.userService.updatePassword(user.id, hashedPassword);
           await this.deletePasswordToken(token);
+        } else {
+          throw new BadRequestException('User does not exist');
         }
       }
     } else {

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { PasswordModule } from './auth/password/password.module';
 import { DatabaseModule } from './database/database.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { PasswordModule } from './modules/auth/password/password.module';
 import { ContactsModule } from './modules/contacts/contacts.module';
 import { UsersModule } from './modules/users/users.module';
 
@@ -13,7 +13,10 @@ import { UsersModule } from './modules/users/users.module';
     DatabaseModule,
     AuthModule,
     ContactsModule,
-    ConfigModule.forRoot()
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [], 
+    }),
   ],
 })
 export class AppModule {}
