@@ -13,7 +13,7 @@ export const databaseProviders = [
         port: 3306,
         username: 'root',
         password: '',
-        database: 'nestjs-phonebook-backup',
+        database: 'nestjs-phonebook',
       });
       sequelize.addModels([User, Password, Contact]);
       await sequelize.sync();
