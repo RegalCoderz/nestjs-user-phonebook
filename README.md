@@ -21,9 +21,21 @@
 
 - <https://dev.to/dannypule/exclude-route-from-nest-js-authgaurd-h0>
 
-### CAN HELP IN
+## Google Recaptcha
 
-## Configurations
+- <https://npm.io/package/@nestlab/google-recaptcha>
+
+### Other 3 Methods
+
+- <https://stackoverflow.com/questions/65687512/nestjs-and-google-recaptcha>
+
+### Google Recaptcha Example
+
+- <https://github.com/chvarkov/google-recaptcha-example>
+
+## CAN HELP IN
+
+### Configurations
 
 - <https://youtu.be/eRjIZHcDLHk>
 - <https://youtu.be/tu3uFMrCqq4>
