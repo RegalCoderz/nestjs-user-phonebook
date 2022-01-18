@@ -32,6 +32,10 @@
 - <https://youtu.be/eRjIZHcDLHk>
 - <https://youtu.be/tu3uFMrCqq4>
 
+## Cors Middleware
+
+- <https://www.thecodecampus.de/blog/creating-cors-middleware-nest-js>
+
 ## What is meant by
 
 - Interceptors
