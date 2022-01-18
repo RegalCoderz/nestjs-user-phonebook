@@ -6,6 +6,7 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { Recaptcha } from '@nestlab/google-recaptcha';
 import { Public } from 'src/common/decorators/public.decorator';
 import { User } from '../models/user/user.model';
 import { UserDTO } from '../modules/users/dto/User.dto';
@@ -23,6 +24,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Public()
+  @Recaptcha()
   @Post('/signin')
   async signIn(@Request() req) {
     return this.authService.logInUser(req.user);
