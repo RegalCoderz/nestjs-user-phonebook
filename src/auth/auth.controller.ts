@@ -31,6 +31,7 @@ export class AuthController {
   }
 
   @Public()
+  @Recaptcha()
   @Post('/signup')
   signUpUser(@Body() createUserDto: UserDTO): Promise<User> {
     return this.authService.signUpUser(createUserDto);

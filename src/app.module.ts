@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { GoogleRecaptchaModule, GoogleRecaptchaNetwork } from '@nestlab/google-recaptcha';
+import { GoogleRecaptchaModule } from '@nestlab/google-recaptcha';
 import { AuthModule } from './auth/auth.module';
 import { PasswordModule } from './auth/password/password.module';
 import { DatabaseModule } from './database/database.module';
@@ -16,10 +16,11 @@ import { UsersModule } from './modules/users/users.module';
     ContactsModule,
     ConfigModule.forRoot(),
     GoogleRecaptchaModule.forRoot({
-      secretKey: 'google-recaptcha-secret-key',
+      secretKey: '6LedDx4eAAAAANY-lJ4ZPdcYPRR8PR4UZKnkPw-c',
       response: (req) => req.headers.recaptcha,
       skipIf: process.env.NODE_ENV !== 'production',
-      network: GoogleRecaptchaNetwork.Recaptcha,
+      score: 0.5,
+      actions: [],
     }),
   ],
 })
