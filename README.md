@@ -23,6 +23,7 @@
 
 ## Google Recaptcha
 
+- [Google Recaptcha Account for Secret Key](https://www.google.com/recaptcha/admin)
 - <https://npm.io/package/@nestlab/google-recaptcha>
 
 ### Other 3 Methods
@@ -37,7 +38,7 @@
 
 ### Configurations
 
-- <https://youtu.be/eRjIZHcDLHk>
+- <https://github.com/chvarkov/google-recaptcha-example>
 - <https://youtu.be/tu3uFMrCqq4>
 
 ## What is meant by
