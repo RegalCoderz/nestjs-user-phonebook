@@ -5,7 +5,7 @@ import {
   Request,
   UseGuards
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
 import { User } from '../models/user/user.model';
 import { UserDTO } from '../modules/users/dto/User.dto';
@@ -15,6 +15,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('access-token')
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
