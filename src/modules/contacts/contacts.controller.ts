@@ -50,27 +50,7 @@ export class ContactsController {
   removeContactFromFavorite(@Param() params, @Request() req): Promise<Contact> {
     return this.contactsService.removeFromFavorite(params.id, req.user.userId);
   }
-
-  // @Post(':id/avatar')
-  // @UseInterceptors(FileInterceptor('file', {
-  //     storage: bucket({
-  //       destination: `./uploads/avatars`,
-  //       filename: (req, file, cb) => {
-  //         const randomName = Array(5)
-  //         .fill(null)
-  //         .map(() => Math.round(Math.random() * 16).toString(16))
-  //         .join('');
-  //         return cb(null, `${randomName}${extname(file.originalname)}`);
-  //       },
-  //     }),
-  // }))
-  // uploadContactAvatar(
-  //   @Param() params,
-  //   @Request() req,
-  //   @UploadedFile() file: Express.Multer.File,
-  // ) {
-  //   return 'Hello World';
-  // }
+ 
 
   @Get(':id')
   @ApiParam({ name: 'id' })
