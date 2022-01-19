@@ -15,10 +15,6 @@ import { Contact } from 'src/models/contact/contact.model';
 import { ContactsService } from './contacts.service';
 import { ContactDTO } from './dto/Contact.dto';
 import { GetContactsFilterDTO } from './dto/GetContactsFilter.dto';
-// import admin from 'firebase-admin';
-
-
-// const bucketStorage = getStorage().bucket('gs://nestjs-phonebook.appspot.com');
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('access-token')
