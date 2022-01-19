@@ -29,6 +29,8 @@ async function bootstrap() {
 
   /* =========== Swagger Configuration Ended =========== */
 
-  await app.listen(3000);
+  await app.listen(3000, () => {
+    console.log(`Server running on port ${process.env.PORT}`);
+  });
 }
 bootstrap();
