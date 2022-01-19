@@ -7,31 +7,18 @@ import {
   Post,
   Put,
   Query,
-  Request,
-  UploadedFile,
-  UseGuards,
-  UseInterceptors
+  Request, UseGuards
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Contact } from 'src/models/contact/contact.model';
 import { ContactsService } from './contacts.service';
 import { ContactDTO } from './dto/Contact.dto';
 import { GetContactsFilterDTO } from './dto/GetContactsFilter.dto';
+// import admin from 'firebase-admin';
 
-// export const storage = {
-//   storage: diskStorage({
-//     destination: `./uploads/avatars`,
-//     filename: (req, file, cb) => {
-//       const randomName = Array(5)
-//       .fill(null)
-//       .map(() => Math.round(Math.random() * 16).toString(16))
-//       .join('');
-//       return cb(null, `${randomName}${extname(file.originalname)}`);
-//     },
-//   }),
-// }
+
+// const bucketStorage = getStorage().bucket('gs://nestjs-phonebook.appspot.com');
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('access-token')
@@ -68,17 +55,26 @@ export class ContactsController {
     return this.contactsService.removeFromFavorite(params.id, req.user.userId);
   }
 
-  @Post(':id/avatar')
-  @UseInterceptors(
-    FileInterceptor('file'),
-  )
-  uploadContactAvatar(
-    @Param() params,
-    @Request() req,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
-   return 'Hello World';
-  }
+  // @Post(':id/avatar')
+  // @UseInterceptors(FileInterceptor('file', {
+  //     storage: bucket({
+  //       destination: `./uploads/avatars`,
+  //       filename: (req, file, cb) => {
+  //         const randomName = Array(5)
+  //         .fill(null)
+  //         .map(() => Math.round(Math.random() * 16).toString(16))
+  //         .join('');
+  //         return cb(null, `${randomName}${extname(file.originalname)}`);
+  //       },
+  //     }),
+  // }))
+  // uploadContactAvatar(
+  //   @Param() params,
+  //   @Request() req,
+  //   @UploadedFile() file: Express.Multer.File,
+  // ) {
+  //   return 'Hello World';
+  // }
 
   @Get(':id')
   @ApiParam({ name: 'id' })

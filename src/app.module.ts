@@ -13,7 +13,9 @@ import { UsersModule } from './modules/users/users.module';
     DatabaseModule,
     AuthModule,
     ContactsModule,
-    ConfigModule.forRoot()
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
   ],
 })
 export class AppModule {}
