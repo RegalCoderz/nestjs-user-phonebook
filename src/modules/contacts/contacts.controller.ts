@@ -20,18 +20,7 @@ import { ContactsService } from './contacts.service';
 import { ContactDTO } from './dto/Contact.dto';
 import { GetContactsFilterDTO } from './dto/GetContactsFilter.dto';
 
-// export const storage = {
-//   storage: diskStorage({
-//     destination: `./uploads/avatars`,
-//     filename: (req, file, cb) => {
-//       const randomName = Array(5)
-//       .fill(null)
-//       .map(() => Math.round(Math.random() * 16).toString(16))
-//       .join('');
-//       return cb(null, `${randomName}${extname(file.originalname)}`);
-//     },
-//   }),
-// }
+
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('access-token')
