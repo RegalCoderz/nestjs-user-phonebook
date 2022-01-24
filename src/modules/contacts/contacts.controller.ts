@@ -9,7 +9,7 @@ import {
   Query,
   Request, UseGuards
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Contact } from 'src/models/contact/contact.model';
 import { ContactsService } from './contacts.service';
@@ -18,6 +18,7 @@ import { GetContactsFilterDTO } from './dto/GetContactsFilter.dto';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('access-token')
+@ApiTags('contacts')
 @Controller('contacts')
 export class ContactsController {
   constructor(private contactsService: ContactsService) {}

@@ -5,7 +5,7 @@ import {
   Request,
   UseGuards
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Recaptcha } from '@nestlab/google-recaptcha';
 import { Public } from 'src/common/decorators/public.decorator';
 import { User } from 'src/models/user/user.model';
@@ -16,6 +16,8 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth('access-token')
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
