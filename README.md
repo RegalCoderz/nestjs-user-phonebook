@@ -21,12 +21,36 @@
 
 - <https://dev.to/dannypule/exclude-route-from-nest-js-authgaurd-h0>
 
+
+## Google Recaptcha
+
+## @nestjs/swagger does not set authorization headers
+
+- <https://stackify.dev/589977-nestjs-swagger-does-not-set-authorization-headers>
+
 ### CAN HELP IN
 
-## Configurations
+- [Google Recaptcha Account for Secret Key](https://www.google.com/recaptcha/admin)
+- <https://npm.io/package/@nestlab/google-recaptcha>
 
-- <https://youtu.be/eRjIZHcDLHk>
+### Other 3 Methods
+
+- <https://stackoverflow.com/questions/65687512/nestjs-and-google-recaptcha>
+
+### Google Recaptcha Example
+
+- <https://github.com/chvarkov/google-recaptcha-example>
+
+## CAN HELP IN
+
+### Configurations
+
+- <https://github.com/chvarkov/google-recaptcha-example>
 - <https://youtu.be/tu3uFMrCqq4>
+
+## Cors Middleware
+
+- <https://www.thecodecampus.de/blog/creating-cors-middleware-nest-js>
 
 ## What is meant by
 
