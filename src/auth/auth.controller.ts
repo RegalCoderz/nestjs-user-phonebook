@@ -8,14 +8,14 @@ import {
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Recaptcha } from '@nestlab/google-recaptcha';
 import { Public } from 'src/common/decorators/public.decorator';
-import { User } from '../models/user/user.model';
+import { User } from 'src/models/user/user.model';
 import { UserDTO } from '../modules/users/dto/User.dto';
 import { AuthService } from './auth.service';
+import { SignInDTO } from './dto/SignIn.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @UseGuards(JwtAuthGuard)
-@ApiBearerAuth('access-token')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -26,7 +26,7 @@ export class AuthController {
   @Public()
   @Recaptcha()
   @Post('/signin')
-  async signIn(@Request() req) {
+  async signIn(@Body() signInDTO: SignInDTO, @Request() req) {
     return this.authService.logInUser(req.user);
   }
 
@@ -37,12 +37,14 @@ export class AuthController {
     return this.authService.signUpUser(createUserDto);
   }
 
+  @ApiBearerAuth('access-token')
   @Post('/forgot-password')
   async createPasswordToken(@Body() body: object) {
     const email = body['email'];
     return this.authService.forgotPassword(email);
   }
 
+  @ApiBearerAuth('access-token')
   @Post('/reset-password')
   async resetPassword(@Body() data: any) {
     const { token, password, password_confirm } = data;
