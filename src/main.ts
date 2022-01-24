@@ -4,7 +4,16 @@ import admin from 'firebase-admin';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+
+  /* =========== NestJS App Configuration Started =========== */
+
   const app = await NestFactory.create(AppModule);
+
+
+  // Enable CORS
+  app.enableCors();
+
+  /* =========== NestJS App Configuration Ended =========== */
 
   /* =========== Swagger Configuration Started =========== */
 

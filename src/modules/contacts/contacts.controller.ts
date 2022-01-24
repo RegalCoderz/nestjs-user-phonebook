@@ -39,16 +39,10 @@ export class ContactsController {
     return this.contactsService.findFavoriteContacts(req.user.userId);
   }
 
-  @Put(':id/add-favorite')
+  @Put(':id/favorite-toggle')
   @ApiParam({ name: 'id' })
-  addContactToFavorite(@Param() params, @Request() req): Promise<Contact> {
-    return this.contactsService.addToFavorite(params.id, req.user.userId);
-  }
-
-  @Put(':id/remove-favorite')
-  @ApiParam({ name: 'id' })
-  removeContactFromFavorite(@Param() params, @Request() req): Promise<Contact> {
-    return this.contactsService.removeFromFavorite(params.id, req.user.userId);
+  favoriteContactToggleStatus(@Param() params, @Request() req): Promise<Contact> {
+    return this.contactsService.favoriteContactToggler(params.id, req.user.userId);
   }
  
 
