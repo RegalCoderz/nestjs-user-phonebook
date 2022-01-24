@@ -21,12 +21,20 @@
 
 - <https://dev.to/dannypule/exclude-route-from-nest-js-authgaurd-h0>
 
+## @nestjs/swagger does not set authorization headers
+
+- <https://stackify.dev/589977-nestjs-swagger-does-not-set-authorization-headers>
+
 ### CAN HELP IN
 
 ## Configurations
 
 - <https://youtu.be/eRjIZHcDLHk>
 - <https://youtu.be/tu3uFMrCqq4>
+
+## Cors Middleware
+
+- <https://www.thecodecampus.de/blog/creating-cors-middleware-nest-js>
 
 ## What is meant by
 

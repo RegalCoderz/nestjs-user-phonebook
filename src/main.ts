@@ -3,10 +3,18 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+
+  /* =========== NestJS App Configuration Started =========== */
+
   const app = await NestFactory.create(AppModule);
 
-  /* =========== Swagger Configuration Started =========== */ 
-  
+  // Enable CORS
+  app.enableCors();
+
+  /* =========== NestJS App Configuration Ended =========== */
+
+  /* =========== Swagger Configuration Started =========== */
+
   const config = new DocumentBuilder()
     .setTitle('Phonebook API')
     .setDescription('users phonebook example')
@@ -29,6 +37,9 @@ async function bootstrap() {
 
   /* =========== Swagger Configuration Ended =========== */
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT, () => {
+    console.log(`Server running on port ${process.env.PORT}`);
+  });
+
 }
 bootstrap();
