@@ -7,8 +7,9 @@ import {
   Post,
   Put,
   Query,
-  Request, UseGuards
+  Request, UploadedFile, UseGuards, UseInterceptors
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Contact } from 'src/models/contact/contact.model';
@@ -59,6 +60,12 @@ export class ContactsController {
     @Request() req,
   ): Promise<Contact> {
     return await this.contactsService.createContact(contact, req.user.userId);
+  }
+
+  @Post('upload-avatar')
+  @UseInterceptors(FileInterceptor('avatar'))
+  uploadContactImage(@UploadedFile() file: Express.Multer.File) {
+    return this.contactsService.uploadAvatar(file);
   }
 
   @Put(':id')

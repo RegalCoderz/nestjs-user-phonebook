@@ -1,5 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Op } from 'sequelize';
+import { FirebaseStorageService } from 'src/common/services/firebase-storage.service';
 import { Contact } from 'src/models/contact/contact.model';
 import { ContactDTO } from './dto/Contact.dto';
 import { GetContactsFilterDTO } from './dto/GetContactsFilter.dto';
@@ -9,7 +10,12 @@ export class ContactsService {
   constructor(
     @Inject('CONTACTS_REPOSITORY')
     private contactRepository: typeof Contact,
+    private firebaseStorageService: FirebaseStorageService,
   ) {}
+
+  async uploadAvatar(file: Express.Multer.File) {
+    return await this.firebaseStorageService.uploadFile(file);
+  }
 
   async findAll(user_id: number): Promise<Contact[]> {
     return await this.contactRepository.findAll({ where: { user_id } });
