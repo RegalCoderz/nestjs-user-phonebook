@@ -6,17 +6,13 @@ import { AppModule } from './app.module';
 async function bootstrap() {
 
   /* =========== NestJS App Configuration Started =========== */
-
   const app = await NestFactory.create(AppModule);
-
 
   // Enable CORS
   app.enableCors();
-
   /* =========== NestJS App Configuration Ended =========== */
 
   /* =========== Swagger Configuration Started =========== */
-
   const config = new DocumentBuilder()
     .setTitle('Phonebook API')
     .setDescription('users phonebook example')
@@ -36,11 +32,9 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-
   /* =========== Swagger Configuration Ended =========== */
 
   /* =========== Firebase SDK Configuration Started =========== */
-
   admin.initializeApp({
     credential: admin.credential.cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
@@ -49,7 +43,6 @@ async function bootstrap() {
     }),
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
   });
-  
   /* =========== Firebase SDK Configuration Ended =========== */
 
   await app.listen(3000, () => {
