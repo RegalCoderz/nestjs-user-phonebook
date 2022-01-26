@@ -13,10 +13,6 @@ export class ContactsService {
     private firebaseStorageService: FirebaseStorageService,
   ) {}
 
-  async uploadAvatar(file: Express.Multer.File) {
-    return await this.firebaseStorageService.uploadFile(file);
-  }
-
   async findAll(user_id: number): Promise<Contact[]> {
     return await this.contactRepository.findAll({ where: { user_id } });
   }
@@ -74,9 +70,7 @@ export class ContactsService {
   async favoriteContactToggler(id: number, user_id: number): Promise<any> {
     const contact = await this.findOneContact(id, user_id);
 
-    console.log(contact);
-    
-    if(contact) {
+    if (contact) {
       contact.is_favorite = !contact.is_favorite;
       await contact.save();
     } else {
@@ -104,13 +98,27 @@ export class ContactsService {
     return contact;
   }
 
-  // uploadContactAvatar(id: number, user_id: number, avatar_path: string){
-  // const avatar =  this.contactRepository.update(
-  //   { avatar_path },
-  //   { where: { id, user_id } },
-  // );
-  // return avatar_path;
-  // }
+  async uploadAvatar(file: Express.Multer.File, id: number, user_id: number) {
+    const contact = await this.findOneContact(id, user_id);
+    if (file.size <= 5000000) {
+      if (contact) {
+        if (contact.avatar_path) {
+          this.firebaseStorageService.deleteFile(contact.avatar_path); // DELETE old avatar
+          this.uploadAvatarHelper(file, user_id, contact); // UPLOAD new avatar
+        } else {
+          this.uploadAvatarHelper(file, user_id, contact); // UPLOAD new avatar
+        }
+      } else {
+        throw new BadRequestException('Contact not found'); // contact not found
+      }
+    } else {
+      throw new BadRequestException('File size is greater than 1MB'); // File size is greater than 1MB
+    }
+    return {
+      message: 'File uploaded successfully',
+      filePath: file.path,
+    };
+  }
 
   async deleteContact(id: number, user_id: number): Promise<Contact> {
     const contact = await this.findOneContact(id, user_id);
@@ -121,5 +129,20 @@ export class ContactsService {
       },
     });
     return contact;
+  }
+
+  // ==================== Helper Methods  ====================
+
+  async uploadAvatarHelper(
+    file: Express.Multer.File,
+    user_id: number,
+    contact: Contact,
+  ) {
+    const fileResponse = await this.firebaseStorageService.uploadFile(
+      file,
+      user_id,
+    );
+    contact.avatar_path = fileResponse.metadata.fullPath;
+    contact.save();
   }
 }
