@@ -70,9 +70,11 @@ export class ContactsController {
   }
 
   @Post('create')
+  @ApiConsumes('multipart/form-data')
   async createContact(
     @Body() contact: ContactDTO,
     @Request() req,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<Contact> {
     return await this.contactsService.createContact(contact, req.user.userId);
   }

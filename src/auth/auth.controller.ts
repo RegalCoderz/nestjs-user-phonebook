@@ -2,8 +2,7 @@ import {
   Body,
   Controller,
   Post,
-  Request,
-  UseGuards
+  Request, UseGuards
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Recaptcha } from '@nestlab/google-recaptcha';
