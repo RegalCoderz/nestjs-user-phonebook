@@ -6,6 +6,8 @@ import { User } from 'src/models/user/user.model';
 import { UserDTO } from 'src/modules/users/dto/User.dto';
 import { UsersService } from 'src/modules/users/users.service';
 import { Password } from '../models/password/password.model';
+import { ForgetPasswordDTO } from './dto/ForgetPass.dto';
+import { ResetPasswordDTO } from './dto/ResetPass.dto';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +35,7 @@ export class AuthService {
         return rest;
       }
     } else {
-      throw new BadRequestException('User does not exist');
+      throw new BadRequestException('No Account Exists With This Email');
     }
     return null;
   }
@@ -69,7 +71,8 @@ export class AuthService {
     }
   }
 
-  async forgotPassword(email: string) {
+  async forgotPassword(forgetPasswordDTO: ForgetPasswordDTO) {
+    const { email } = forgetPasswordDTO;
     const user = await this.userService.findOneByEmail(email);
 
     if (!user) {
@@ -92,7 +95,8 @@ export class AuthService {
     }
   }
 
-  async resetPassword(token: any, password: string, password_confirm: string) {
+  async resetPassword(resetPasswordDTO: ResetPasswordDTO) {
+    const { token, password, password_confirm} = resetPasswordDTO;
     const resetPasswordToken = await this.findOneByToken(token);
     if (resetPasswordToken) {
       if (password !== password_confirm) {
