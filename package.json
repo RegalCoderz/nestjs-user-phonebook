@@ -32,6 +32,7 @@
     "@nestlab/google-recaptcha": "^2.1.2",
     "bcrypt": "^5.0.1",
     "firebase-admin": "^4.2.1",
+    "googleapis": "^39.2.0",
     "mailhog": "^4.16.0",
     "mysql2": "^2.3.3",
     "nodemailer": "^6.7.2",
