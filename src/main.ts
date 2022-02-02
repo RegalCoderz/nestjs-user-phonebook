@@ -1,19 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import admin from 'firebase-admin';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-
   /* =========== NestJS App Configuration Started =========== */
 
   const app = await NestFactory.create(AppModule);
 
-
   // Enable CORS
   app.enableCors();
-
-  /* =========== NestJS App Configuration Ended =========== */
 
   /* =========== Swagger Configuration Started =========== */
 
@@ -41,19 +36,15 @@ async function bootstrap() {
 
   /* =========== Firebase SDK Configuration Started =========== */
 
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-    }),
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  });
-  
+  // Initialize Firebase
+  // initializeApp(firebaseConfig);
+
   /* =========== Firebase SDK Configuration Ended =========== */
 
+  // App Server Port
   await app.listen(3000, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
   });
+  /* =========== NestJS App Configuration Ended =========== */
 }
 bootstrap();

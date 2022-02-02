@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,9 +8,19 @@ import {
   Post,
   Put,
   Query,
-  Request, UseGuards
+  Request,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiTags
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Contact } from 'src/models/contact/contact.model';
 import { ContactsService } from './contacts.service';
@@ -42,10 +53,15 @@ export class ContactsController {
 
   @Put(':id/favorite-toggle')
   @ApiParam({ name: 'id' })
-  favoriteContactToggleStatus(@Param() params, @Request() req): Promise<Contact> {
-    return this.contactsService.favoriteContactToggler(params.id, req.user.userId);
+  favoriteContactToggleStatus(
+    @Param() params,
+    @Request() req,
+  ): Promise<Contact> {
+    return this.contactsService.favoriteContactToggler(
+      params.id,
+      req.user.userId,
+    );
   }
- 
 
   @Get(':id')
   @ApiParam({ name: 'id' })
@@ -54,11 +70,44 @@ export class ContactsController {
   }
 
   @Post('create')
+  @ApiConsumes('multipart/form-data')
   async createContact(
     @Body() contact: ContactDTO,
     @Request() req,
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<Contact> {
     return await this.contactsService.createContact(contact, req.user.userId);
+  }
+
+  @Post(':id/upload-avatar')
+  @UseInterceptors(FileInterceptor('avatar'))
+  @ApiParam({ name: 'id' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        avatar: {
+          type: 'file',
+          format: 'buffer',
+        },
+      },
+    },
+  })
+  uploadContactImage(
+    @Param() params,
+    @Request() req,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (file) {
+      return this.contactsService.uploadAvatar(
+        file,
+        params.id,
+        req.user.userId,
+      );
+    } else {
+      throw new BadRequestException('Please Upload the Avatar Image');
+    }
   }
 
   @Put(':id')
