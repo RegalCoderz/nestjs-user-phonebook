@@ -38,6 +38,7 @@ export class AuthService {
     return null;
   }
 
+  // ======================== Auth Functions ==========================
   // ======================== JWT Access Token Generation ========================== //
 
   async logInUser(user: any) {
@@ -49,8 +50,6 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
-
-  // ======================== Auth Functions ==========================
 
   async signUpUser(userData: UserDTO): Promise<User> {
     const { email, password } = userData;
@@ -98,7 +97,9 @@ export class AuthService {
       if (password !== password_confirm) {
         throw new BadRequestException('Passwords do not match');
       } else {
-        const user = await this.userService.findOneByEmail(resetPasswordToken.email);
+        const user = await this.userService.findOneByEmail(
+          resetPasswordToken.email,
+        );
 
         if (user) {
           const hashedPassword = await passwordHashing(password);
@@ -116,7 +117,7 @@ export class AuthService {
     };
   }
 
-  // ================= Password Forget/Reset Helper Methods ======================
+  // ================= Password Forget/Reset Helper Methods For Tokens ======================
 
   async createPasswordToken(passwordData): Promise<Password> {
     return await this.passwordRepository.create(passwordData);

@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import admin from 'firebase-admin';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -41,14 +40,14 @@ async function bootstrap() {
 
   /* =========== Firebase SDK Configuration Started =========== */
 
-  admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-    }),
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  });
+  // admin.initializeApp({
+  //   credential: admin.credential.cert({
+  //     projectId: process.env.FIREBASE_PROJECT_ID,
+  //     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+  //     privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+  //   }),
+  //   storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  // });
   
   /* =========== Firebase SDK Configuration Ended =========== */
 
